@@ -1,6 +1,6 @@
 
 # Devs
-Kodlama_io java kampının 4. gün 1. ödevi.
+Java kampının 4. gün 1. ödevi.
 ## Ödev isterleri:
 Adayların kodlama becerilerini iş verenlerle buluşturduğumuz bir proje yazmak istiyoruz.
 
