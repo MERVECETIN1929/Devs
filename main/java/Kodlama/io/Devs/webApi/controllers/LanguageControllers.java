@@ -1,6 +1,8 @@
 package Kodlama.io.Devs.webApi.controllers;
 
 import Kodlama.io.Devs.business.abstracts.LanguageService;
+import Kodlama.io.Devs.business.request.LanguageRequest;
+import Kodlama.io.Devs.business.response.LanguageResponse;
 import Kodlama.io.Devs.entities.concretes.Language;
 import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,16 +26,16 @@ public class LanguageControllers {
         this.languageService=languageService;
     }
     @GetMapping("/getall")
-    public ArrayList<Language> getAll(){
+    public ArrayList<LanguageResponse> getAll(){
         return languageService.getAll();
     }
     @PostMapping("/add")
-    public String add(@RequestBody Language language){
+    public String add(@RequestBody LanguageRequest languageRequest){
         
-         return this.languageService.add(language);
+         return this.languageService.add(languageRequest);
     }
     @GetMapping("/getbyid/{id}")
-    public Language getById(@PathVariable int id){
+    public LanguageResponse getById(@PathVariable int id){
         return languageService.getById(id);
     }
     @DeleteMapping("/delete/{id}")
@@ -41,7 +43,7 @@ public class LanguageControllers {
         return languageService.delete(id);
     }
     @PutMapping("/update/{id}")
-    public String update(@RequestBody Language language,@PathVariable int id) {
-       return languageService.update(language, id);
+    public String update(@RequestBody LanguageRequest languageRequest,@PathVariable int id) {
+       return languageService.update(languageRequest, id);
     }
 }

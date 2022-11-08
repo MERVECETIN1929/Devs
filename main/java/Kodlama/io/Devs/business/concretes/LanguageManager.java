@@ -4,9 +4,12 @@
 package Kodlama.io.Devs.business.concretes;
 
 import Kodlama.io.Devs.business.abstracts.LanguageService;
+import Kodlama.io.Devs.business.request.LanguageRequest;
+import Kodlama.io.Devs.business.response.LanguageResponse;
 import Kodlama.io.Devs.dataAccess.abstracts.LanguageRepository;
 import Kodlama.io.Devs.entities.concretes.Language;
 import java.util.ArrayList;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,47 +24,69 @@ public class LanguageManager implements LanguageService {
     }
 
     @Override
-    public String add(Language language) {
-        if(isExists(language)){
+    public String add(LanguageRequest languageRequest) {
+        if(isExists(languageRequest)){
             return "aynı isimde ekleme yapılamaz";
         }
-        else if(language.getName().isBlank()||language.getName().isEmpty()){
+        else if(languageRequest.getName().isBlank()||languageRequest.getName().isEmpty()){
             return "isim kısmı boş geçilemez";
         }
-        languageRepository.add(language);
+        Language language=new Language();
+        language.setName(languageRequest.getName());
+        languageRepository.save(language);
         return "ekleme başarılı";
 
     }
 
     @Override
-    public String delete(int id) {
-        return languageRepository.delete(id);
+    public String delete(long id) {
+        languageRepository.deleteById(id);
+        return "silme başarılı";
     }
 
     @Override
-    public ArrayList<Language> getAll() {
-        return languageRepository.getAll();
+    public ArrayList<LanguageResponse> getAll() {
+        List<Language> language=languageRepository.findAll();
+        ArrayList<LanguageResponse> languageResponses=new ArrayList<LanguageResponse>();
+        for(Language language1:language){
+            LanguageResponse languageResponse=new LanguageResponse();
+            languageResponse.setId(language1.getId());
+            languageResponse.setName(language1.getName());
+            languageResponses.add(languageResponse);
+        }
+        return languageResponses;
     }
 
     @Override
-    public String update(Language language, int id) {
-        if(isExists(language)){
+    public String update(LanguageRequest languageRequest, long id) {
+        if(isExists(languageRequest)){
             return "aynı isimde ekleme yapılamaz";
         }
-        else if(language.getName().isBlank()||language.getName().isEmpty()){
+        else if(languageRequest.getName().isBlank()||languageRequest.getName().isEmpty()){
             return "isim kısmı boş geçilemez";
         }
-        return languageRepository.update(language, id);
+        Language language=languageRepository.getById(id);
+        language.setName(languageRequest.getName());
+        languageRepository.save(language);
+        return "güncelleme başarılı";
         
     }
 
     @Override
-    public Language getById(int id) {
-        return languageRepository.getById(id);
+    public LanguageResponse getById(long id) {
+        Language language=languageRepository.getById(id);
+        if(language==null){
+            return new LanguageResponse();
+        }
+        LanguageResponse languageResponse=new LanguageResponse();
+        languageResponse.setId(language.getId());
+        languageResponse.setName(language.getName());
+        return languageResponse;
     }
-    public boolean isExists(Language language){
-        for (Language language1 : languageRepository.getAll()) {
-            if(language1.getName().equals(language.getName())){
+    public boolean isExists(LanguageRequest languageRequest){
+        
+        for (Language language1 : languageRepository.findAll()) {
+            if(language1.getName().equals(languageRequest.getName())){
                 return true;
             }
         }
